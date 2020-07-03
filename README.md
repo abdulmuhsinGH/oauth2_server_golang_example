@@ -7,12 +7,14 @@
 
   * Download and install [Docker Desktop](https://www.docker.com/get-started) if you don't have it installed.
   * Download and install [Docker Compose](https://docs.docker.com/compose/install) if you don't have it installed.
-
+  
+## [Setting Up Oauth2 for Google Sign In](https://support.google.com/cloud/answer/6158849?hl=en)
+  * Copy client_secret, client_id and redirect_uri for the next step 
 ## Set up Environment Variables
   * Duplicate the file `.env.template` and rename it as `.env`
   * Complete the information needed in the `.env` file. eg. `DB_NAME=hostname` etc. 
   * Please make sure all information is provided.
-  * Request for API Keys when needed. 
+  * Request for API Keys from Google API. 
 
 ## Building and Running docker container  
   * Open terminal for Linux/macOS. For Windows open command prompt or Powershell
