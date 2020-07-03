@@ -1,0 +1,76 @@
+version: '3'
+
+services:
+  oauth2server_db:
+    container_name: oauth2server_db
+    image: postgres
+    environment:
+      GET_HOST_FROM: dns
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+    hostname: oauth2server_db
+    ports:
+      - ${DB_PORT}:5432
+    volumes:
+      - ./sql/init_db.sql:/docker-entrypoint-initdb.d/1-init_db.sql
+      - ./sql/schema.sql:/docker-entrypoint-initdb.d/2-schema.sql
+      - ./sql/seed.sql:/docker-entrypoint-initdb.d/3-seed.sql
+    networks:
+      - oauth2server_net
+
+  oauth2server:
+    container_name: oauth2server
+    image: oauth2server
+    hostname: oauth2server
+    build: 
+      context: ./
+      dockerfile: Dockerfile
+    environment:
+      GET_HOSTS_FROM: dns 
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+      DB_PORT: ${DB_PORT_DOCKER}
+      DB_HOST: ${DB_HOST_DOCKER_DEV}
+      SESSION_KEY: ${SESSION_KEY}
+      STATE_HASH_KEY: ${STATE_HASH_KEY}
+      ADMIN_CLIENT_ID: ${ADMIN_CLIENT_ID}
+      ADMIN_CLIENT_SECRET: ${ADMIN_CLIENT_SECRET}
+      ADMIN_CLIENT_DOMAIN: ${ADMIN_CLIENT_DOMAIN}
+      JWT_SECRET: ${JWT_SECRET}
+      REDIS_SERVER_HOST: ${REDIS_SERVER_HOST_DOCKER_DEV}
+      REDIS_SERVER_PASS: ${REDIS_SERVER_PASS}
+      REDIS_SERVER_PORT: ${REDIS_SERVER_PORT_DOCKER}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      GOOGLE_REDIRECT_URL: ${GOOGLE_REDIRECT_URL}
+      AUTH_ALLOWED_ORIGIN: ${AUTH_ALLOWED_ORIGIN}
+    networks:
+    - oauth2server_net
+    ports:
+    - 9096:9096
+    - 8080:8080 #Client Port
+    depends_on:
+    - oauth2server_db
+    - redis_db
+  
+  redis_db:
+    image: "redis:alpine"
+    container_name: redis_db
+    command: redis-server --requirepass ${REDIS_SERVER_PASS}
+    hostname: redis_db
+    ports:
+      - "6379:6379"
+    volumes:
+      - $PWD/redis-data:/var/lib/redis
+    environment:
+      - REDIS_REPLICATION_MODE=master
+      - REDIS_APPENDONLY=yes
+      - REDIS_APPENDFSYNC=always
+    networks:
+      - oauth2server_net
+
+networks:
+  oauth2server_net:
+    driver: bridge
