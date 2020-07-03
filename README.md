@@ -18,5 +18,5 @@
   * change directory to the project folder. i/e this project folder
   * run the command `docker-compose -f docker-compose.yml build` to build an images using the docker-compose YAML file in the project. This will take a while to finish building. 
   * run the command  `docker-compose -f docker-compose.yml up`. The containers should start running. You can monitor logs whiles it running in your terminal
-  * Go to your browser  and visit `127.0.0.1:8080` to access the app. 
-  * run CTRL + C to terminate the containers running. and `docker-compose -f docker-compose.dev.yml down` to remove the images. 
+  * Go to your browser  and visit `127.0.0.1:8080` to access the client app. 
+  * run CTRL + C to terminate the containers running. and `docker-compose -f docker-compose.yml down` to remove the images. 
