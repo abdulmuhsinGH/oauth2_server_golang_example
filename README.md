@@ -1,4 +1,5 @@
-# Oauth2 Authorization Code built with Golang, postgresql, redis with Goggle Login
+# Oauth2 Authorization Code built with Golang, postgresql, redis 
+## with Google Login/Sign Up
 ## with help from https://godoc.org/gopkg.in/oauth2.v3
 
 # Setting up with Docker and docker-compose
